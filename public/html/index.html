@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+</head>
+
+<body>
+    <div id="logon-form-wrapper" class="">
+        <form id="logon-form">
+            <input type="text" name="username" placeholder="nickname" id="name-input">
+            <div class="color-selections">
+                <button class="color-btn" id="c1" type="button">
+                    
+                </button>
+                <button class="color-btn" id="c2" type="button">
+        
+                </button>
+                <button class="color-btn" id="c3" type="button">
+        
+                </button>
+                <button class="color-btn" id="c4" type="button">
+        
+                </button>
+            </div>
+            <p id="err-msg"></p>
+            <button id="submit-info-btn" type="submit">Start Chatting!</button>
+        </form>
+    </div>
+
+    <div id="messaging-interface-wrapper">
+        <div class="online-users-wrap">
+            <ul id="online-users-list">
+
+            </ul>
+        </div>
+        <div class="message-wrap">
+            <ul id="message-list">
+
+            </ul>
+        </div>
+
+        <form action="" id="chat-form">
+            <input type="text" name="msg" placeholder="message" id="msg-input">
+            <button>
+                Send
+            </button>
+        </form>
+    </div>
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="javascript/chat.js"></script>
+</body>
+
+</html>
