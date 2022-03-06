@@ -6,7 +6,6 @@ let messageList = document.getElementById("message-list");
 let messageWrap = document.getElementById('message-wrap');
 let messageListHtml;
 let messagingView = document.getElementById('messaging-interface-wrapper');
-let onlineUsersWrap = document.getElementById('online-users-wrap');
 
 let chatInterface = document.getElementById('chat-interface-wrap')
 
@@ -35,9 +34,11 @@ chatForm.addEventListener('submit', (e) => {
 showOnlineUsersBtn.addEventListener('click', () => {
     if (!showUsersFlag) {
         messagingView.classList.add('hide');
+        onlineUsersList.classList.remove('hide');
         showUsersFlag = true;
     } else {
         messagingView.classList.remove('hide');
+        onlineUsersList.classList.add('hide');
         showUsersFlag = false;
     }
 
@@ -103,6 +104,7 @@ socket.on('chat message', (obj) => {
     messageBy.style.color = obj.color;
 
     time.id = "time";
+    messageBy.id = "name";
 
     // append the message to the message container
     messageContainer.appendChild(message);

@@ -33,11 +33,14 @@
     </div>
 
     <div id="chat-interface-wrap" class="hide">
-        <div id="online-users-wrap">
-            <button id="show-users">
-                <img src="https://img.icons8.com/external-becris-lineal-becris/64/ffffff/external-users-mintab-for-ios-becris-lineal-becris.png" width="30px"/>
-            </button>
-            <ul id="online-users-list">
+        <div class="online-users-interface-wrap">
+            <header id="chat-header">
+                <button id="show-users">
+                    <img src="https://img.icons8.com/external-becris-lineal-becris/64/ffffff/external-users-mintab-for-ios-becris-lineal-becris.png" width="30px"/>
+                </button>
+            </header>
+
+            <ul id="online-users-list" class="hide">
 
             </ul>
         </div>
@@ -49,7 +52,7 @@
             </div>
 
             <form action="" id="chat-form">
-                <input type="text" name="msg" placeholder="message" class="input" id='msg-input'>
+                <input type="text" name="msg" placeholder="Type a message..." class="input" id='msg-input'>
                 <button>
                     <img src="https://img.icons8.com/external-bartama-outline-32-bartama-graphic/64/ffffff/external-email-e-mail-bartama-outline-32-bartama-graphic-7.png" width="30px"/>
                 </button>
