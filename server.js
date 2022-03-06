@@ -49,10 +49,47 @@ io.on('connection', (socket) => {
         let curTime = dateTime.now().toLocaleString(dateTime.TIME_SIMPLE);
         let curName;
         let curColor;
+
+        let newNickname;
+        let NewColor;
+
+
+        // if the chat input matches with the change nickname command
+        // '/nick <new nickname>'
+        if ((/\/nick{1}\s<{1}[\w*\s*\W*\d*]*>{1}/gm).test(obj.chatInput)) {
+            newNickname = obj.chatInput.slice(obj.chatInput.indexOf('<') + 1, obj.chatInput.indexOf('>'));
+
+        }
+
+        // if the chat input matches with the change nickname command
+        // '/nick <new nickname>'
+        if ((/\/nick{1}\s<{1}[\w*\s*\W*\d*]*>{1}/gm).test(obj.chatInput)) {
+            newNickname = obj.chatInput.slice(obj.chatInput.indexOf('<') + 1, obj.chatInput.indexOf('>'));
+
+        }
+
         // Find the name of the person with the matching socket id from the list of users.
         for (let user of users) {
             // if the socket id of the user matches the socket id of the emitted object
             if (user.sId == obj.sId) {
+                // if a new nickname was set, change it
+                if (newNickname != null) {
+                    // if new nickname is not in the list of current nicknames
+                    if (nicknames.indexOf(newNickname) == -1) {
+                        // update nickname is array of users
+                        nicknames[nicknames.indexOf(user.name)] = newNickname;
+                        // update nickname in user object
+                        user.name = newNickname
+                        newNickname = null;
+
+                    } else {
+                        socket.emit('chat message', { chatInput: 'command error: that nickname is not unique!', name: curName, time: curTime, color: curColor, sId: socket.id });
+                        newNickname = null;
+                    }
+
+                    // update list of online users with the new name
+                    updateUserList();
+                }
                 curName = user.name;
                 curColor = user.color;
                 // store the user's message with its timestamp in the user object
@@ -62,6 +99,7 @@ io.on('connection', (socket) => {
                 console.log(user);
             }
         }
+
         io.emit('chat message', { chatInput: obj.chatInput, name: curName, time: curTime, color: curColor, sId: socket.id });
     });
 
