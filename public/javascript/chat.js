@@ -21,22 +21,40 @@ let logonView = document.getElementById('logon-form-wrapper');
 
 let onlineUsersList = document.getElementById('online-users-list');
 
+// flag for the button that shows the online users
 let showUsersFlag = false;
 
+// array of colors possible for users to select
+let colorArr = ['#fe6d73', '#ffcb77', '#ffcb77', '#cd61f8'];
+
+// some default nicknames for random selection if a name is not inputted
+let defaultNamesArr = ['Moana', 'Olaf', 'Flynn', 'Jafar', 'Winnie', 'Mickey', 'Stitch', 'Simba', 'Dory', 'Nemo', 'Buzz', 'Woody', 'McQueen']
+
+// listen for a submit event on the chat form
 chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    // if a value was submitted for the message
     if (chatInput.value) {
+        // emit the message and user's socket id to the server
         socket.emit('chat message', { chatInput: chatInput.value, sId: socket.id });
+        // reset the chat input
         chatInput.value = '';
     }
 });
 
+// listen for a click from the 'online users' icon button
 showOnlineUsersBtn.addEventListener('click', () => {
+    // if the flag is unset, show the list of online users
+    // and hide the messages
     if (!showUsersFlag) {
         messagingView.classList.add('hide');
         onlineUsersList.classList.remove('hide');
+        // switch the flag
         showUsersFlag = true;
-    } else {
+    }
+    // if the flag is set, hide the list of online users
+    // and display the messages
+    else {
         messagingView.classList.remove('hide');
         onlineUsersList.classList.add('hide');
         showUsersFlag = false;
@@ -49,39 +67,51 @@ showOnlineUsersBtn.addEventListener('click', () => {
 colorBtns.forEach((button) => {
     button.addEventListener('click', element => {
         if (button.id == 'c1') {
-            userColor = '#fe6d73';
+            userColor = colorArr[0];
         } else if (button.id == 'c2') {
-            userColor = '#ffcb77';
+            userColor = colorArr[1];
         } else if (button.id == 'c3') {
-            userColor = '#17c3b2'
+            userColor = colorArr[2]
         } else if (button.id == 'c4') {
-            userColor = '#cd61f8';
+            userColor = colorArr[3];
         }
     });
 });
 
+// listen for a submit event on the login form
 logonForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    let curName = nameInput.value;
 
-    if (nameInput.value && userColor != null) {
-        socket.emit('set-user-info', { name: nameInput.value, color: userColor }, (uniqueName) => {
-            if (!uniqueName) {
-                errMsg.textContent = "This nickname is in use, please try again";
-            } else {
-                errMsg.textContent = '';
-                logonView.classList.add('hide');
-                chatInterface.classList.remove('hide');
-
-            }
-        });
-        nameInput.value = '';
-    } else if (nameInput.value && userColor == null) {
-        errMsg.textContent = 'You have not selected a color';
-    } else if (!nameInput.value && userColor != null) {
-        errMsg.textContent = 'You have not entered a nickname';
-    } else {
-        errMsg.textContent = 'Please enter a nickname and select a color';
+    // If the user did not select a color
+    if (userColor == null) {
+        // set a random, default color
+        userColor = _.sample(colorArr);
     }
+
+    // if the user did not set a name
+    if (curName == '') {
+        // set a default, random name
+        curName = _.sample(defaultNamesArr);
+    }
+
+    // Emit the user's name and color to the server with a callback function checking for the 
+    // name's uniqueness
+    socket.emit('set-user-info', { name: curName, color: userColor }, (uniqueName) => {
+        if (!uniqueName) {
+            errMsg.textContent = "This nickname is in use, please choose a different name.";
+        } else {
+            // empty the error message
+            errMsg.textContent = '';
+            // switch views
+            logonView.classList.add('hide');
+            chatInterface.classList.remove('hide');
+
+        }
+    });
+    // reset the name input's value
+    nameInput.value = '';
+
 });
 
 socket.on('chat message', (obj) => {
