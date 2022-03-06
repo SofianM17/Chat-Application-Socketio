@@ -125,16 +125,22 @@
     }
     #chat-header {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         width: 100%;
         height: 50px;
         margin-top: 10px;
-        #show-users {
+        #show-users,
+        #show-settings {
             border: none;
             background-color: transparent;
             cursor: pointer;
-            padding-right: 10px;
+        }
+        #show-users {
+            margin-left: 10px;
+        }
+        #show-settings {
+            margin-right: 10px;
         }
     }
     #online-users-list {

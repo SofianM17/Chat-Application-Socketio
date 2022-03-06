@@ -1,3 +1,8 @@
+/* author: Sofian Mustafa */
+/* reference: The server's code was partly set up by following
+this example by Traversy Media
+https://www.youtube.com/watch?v=jD7FnbI76Hg&t=1605s*/
+
 const path = require('path');
 const express = require('express');
 const http = require('http');
@@ -46,25 +51,30 @@ io.on('connection', (socket) => {
         // create a DateTime object
         let dateTime = luxon.DateTime;
         // get the current time and format it.
-        let curTime = dateTime.now().toLocaleString(dateTime.TIME_SIMPLE);
+        let curTime = dateTime.now().toLocaleString(dateTime.TIME_WITH_SECONDS);
         let curName;
         let curColor;
 
         let newNickname;
-        let NewColor;
+        let newColor;
 
 
         // if the chat input matches with the change nickname command
         // '/nick <new nickname>'
         if ((/\/nick{1}\s<{1}[\w*\s*\W*\d*]*>{1}/gm).test(obj.chatInput)) {
+            // slice the new nickname out of the string
             newNickname = obj.chatInput.slice(obj.chatInput.indexOf('<') + 1, obj.chatInput.indexOf('>'));
 
         }
 
-        // if the chat input matches with the change nickname command
-        // '/nick <new nickname>'
-        if ((/\/nick{1}\s<{1}[\w*\s*\W*\d*]*>{1}/gm).test(obj.chatInput)) {
-            newNickname = obj.chatInput.slice(obj.chatInput.indexOf('<') + 1, obj.chatInput.indexOf('>'));
+        // if the chat input matches with the change nickcolor command
+        // '/nickcolor <RRRGGGBBB>'
+        if ((/\/nickcolor{1}\s<{1}\d{9}>{1}/gm).test(obj.chatInput)) {
+            // slice the new color out of the string
+            newColor = obj.chatInput.slice(obj.chatInput.indexOf('<') + 1, obj.chatInput.indexOf('>'));
+            // form the string for the rgb style
+            newColor = 'rgb(' + newColor[0] + newColor[1] + newColor[2] + ', ' + newColor[3] + newColor[4] +
+                newColor[5] + ', ' + newColor[6] + newColor[7] + newColor[8] + ')';
 
         }
 
@@ -90,6 +100,17 @@ io.on('connection', (socket) => {
                     // update list of online users with the new name
                     updateUserList();
                 }
+                // if a new color was set, change it
+                if (newColor != null) {
+
+                    // update nickname in user object
+                    user.color = newColor;
+                    newColor = null;
+
+                    // update list of online users with the new color
+                    updateUserList();
+                }
+
                 curName = user.name;
                 curColor = user.color;
                 // store the user's message with its timestamp in the user object
@@ -113,7 +134,6 @@ io.on('connection', (socket) => {
 
             users.push(new User(obj.name, socket.id, obj.color));
             updateUserList();
-            //console.log(users);
             uniqueName(true);
         } else {
             uniqueName(false);

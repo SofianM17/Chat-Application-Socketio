@@ -199,9 +199,9 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -210,11 +210,19 @@
   margin-top: 10px;
 }
 
-#chat-interface-wrap #chat-header #show-users {
+#chat-interface-wrap #chat-header #show-users,
+#chat-interface-wrap #chat-header #show-settings {
   border: none;
   background-color: transparent;
   cursor: pointer;
-  padding-right: 10px;
+}
+
+#chat-interface-wrap #chat-header #show-users {
+  margin-left: 10px;
+}
+
+#chat-interface-wrap #chat-header #show-settings {
+  margin-right: 10px;
 }
 
 #chat-interface-wrap #online-users-list {
