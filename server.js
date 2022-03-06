@@ -15,17 +15,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 // list of names
 let nicknames = [];
 
-// class for user
+// class for creating user obects
 class User {
-    constructor(name, id, color) {
+    constructor(name, id, color, messages) {
         this.sId = id;
         this.name = name;
         this.color = color;
+        // list of message objects
+        this.messages = [];
+    }
+}
+
+// class to create message objects
+class Message {
+    constructor(message, time) {
+        this.message = message;
+        this.time = time;
     }
 }
 
 // list of users
 let users = [];
+//
+let messages = [];
 
 // run server when a client connects
 io.on('connection', (socket) => {
@@ -43,9 +55,18 @@ io.on('connection', (socket) => {
             if (user.sId == obj.sId) {
                 curName = user.name;
                 curColor = user.color;
+                // store the user's message with its timestamp in the user object
+                user.messages.push(new Message(obj.chatInput, curTime));
+                // push the message to the messages array to maintain ordering of messages
+                messages.push(obj.chatInput);
+                console.log(user);
             }
         }
-        io.emit('chat message', { chatInput: obj.chatInput, name: curName, time: curTime, color: curColor });
+        io.emit('chat message', { chatInput: obj.chatInput, name: curName, time: curTime, color: curColor, sId: socket.id });
+    });
+
+    socket.on('all messages', (messageListHtml) => {
+        io.emit('all messages', messageListHtml);
     });
 
     socket.on('set-user-info', (obj, uniqueName) => {
@@ -54,7 +75,7 @@ io.on('connection', (socket) => {
 
             users.push(new User(obj.name, socket.id, obj.color));
             updateUserList();
-            console.log(users);
+            //console.log(users);
             uniqueName(true);
         } else {
             uniqueName(false);
@@ -64,7 +85,7 @@ io.on('connection', (socket) => {
 
     //  emit an updated list of users to the client
     function updateUserList() {
-        io.emit('update user list', users);
+        io.emit('update user interface', users);
     }
 
     socket.on('disconnect', () => {

@@ -12,7 +12,8 @@
 <body>
     <div id="logon-form-wrapper" class="">
         <form id="logon-form">
-            <input type="text" name="username" placeholder="nickname" id="name-input">
+            <input type="text" name="username" placeholder="nickname" id="name-input" class='input'>
+            <p id="err-msg"></p>
             <div class="color-selections">
                 <button class="color-btn" id="c1" type="button">
                     
@@ -27,29 +28,33 @@
         
                 </button>
             </div>
-            <p id="err-msg"></p>
             <button id="submit-info-btn" type="submit">Start Chatting!</button>
         </form>
     </div>
 
-    <div id="messaging-interface-wrapper">
-        <div class="online-users-wrap">
+    <div id="chat-interface-wrap" class="hide">
+        <div id="online-users-wrap">
+            <button id="show-users">
+                <img src="https://img.icons8.com/external-becris-lineal-becris/64/ffffff/external-users-mintab-for-ios-becris-lineal-becris.png" width="30px"/>
+            </button>
             <ul id="online-users-list">
 
             </ul>
         </div>
-        <div class="message-wrap">
-            <ul id="message-list">
+        <div id="messaging-interface-wrapper">
+            <div id="message-wrap">
+                <ul id="message-list">
 
-            </ul>
+                </ul>
+            </div>
+
+            <form action="" id="chat-form">
+                <input type="text" name="msg" placeholder="message" class="input" id='msg-input'>
+                <button>
+                    <img src="https://img.icons8.com/external-bartama-outline-32-bartama-graphic/64/ffffff/external-email-e-mail-bartama-outline-32-bartama-graphic-7.png" width="30px"/>
+                </button>
+            </form>
         </div>
-
-        <form action="" id="chat-form">
-            <input type="text" name="msg" placeholder="message" id="msg-input">
-            <button>
-                Send
-            </button>
-        </form>
     </div>
 
 
