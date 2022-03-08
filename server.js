@@ -1,5 +1,5 @@
-/* author: Sofian Mustafa */
-/* reference: The server's code was partly set up by following
+/* Author: Sofian Mustafa */
+/* Reference: Nodemon and express were partly set up by following
 this example by Traversy Media
 https://www.youtube.com/watch?v=jD7FnbI76Hg&t=1605s*/
 
@@ -7,7 +7,6 @@ const path = require('path');
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
-const nodemon = require('nodemon');
 
 const luxon = require('luxon');
 
@@ -48,6 +47,7 @@ let chatlog = [];
 // run server when a client connects
 io.on('connection', (socket) => {
 
+    // server side event handler for 'chat message'
     socket.on('chat message', (obj) => {
         // create a DateTime object
         let dateTime = luxon.DateTime;
@@ -94,6 +94,7 @@ io.on('connection', (socket) => {
                         newNickname = null;
 
                     } else {
+                        // emit the error chat message only to the user that invoked the command
                         socket.emit('chat message', { chatInput: 'command error: that nickname is not unique!', name: curName, time: curTime, color: curColor, sId: socket.id });
                         newNickname = null;
                     }
@@ -104,7 +105,7 @@ io.on('connection', (socket) => {
                 // if a new color was set, change it
                 if (newColor != null) {
 
-                    // update nickname in user object
+                    // update color in user object
                     user.color = newColor;
                     newColor = null;
 
@@ -116,23 +117,27 @@ io.on('connection', (socket) => {
                 curColor = user.color;
                 // store the user's message with its timestamp in the user object
                 user.messages.push(new Message(obj.chatInput, curTime));
-                // push the message to the chatlog to maintain ordering of messages
+                // push the message to the chatlog
                 chatlog.push(obj.chatInput);
-                console.log(user);
             }
         }
 
+        // emit required info for chat message to client side
         io.emit('chat message', { chatInput: obj.chatInput, name: curName, time: curTime, color: curColor, sId: socket.id });
     });
 
     socket.on('all messages', () => {
+        // emit required info for populating chatlog to client side
         io.emit('all messages', { users: users, chatlog: chatlog, sId: socket.id });
     });
 
     socket.on('set-user-info', (obj, uniqueName) => {
+        // if name is not already in nicknames
         if (nicknames.indexOf(obj.name) == -1) {
+            // add the name to nicknames
             nicknames.push(obj.name);
 
+            // create a new user object with provided info and socket id
             users.push(new User(obj.name, socket.id, obj.color));
             updateUserList();
             uniqueName(true);
@@ -162,11 +167,6 @@ io.on('connection', (socket) => {
             }
         }
 
-        // filter out the disconnected user from the list of users
-        // users = users.filter((user) => {
-        //     return user.sId !== socket.id;
-        // });
-
         updateUserList();
     });
 });
@@ -175,10 +175,7 @@ const PORT = 3000 || process.env.PORT;
 
 server.listen(PORT, console.log(`server running on port ${PORT}`));
 
+// route the index.html file
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/html/index.html')
-})
-
-app.get('/chat', (req, res) => {
-    res.sendFile(__dirname + '/public/html/chat.html')
 })

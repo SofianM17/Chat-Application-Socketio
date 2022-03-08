@@ -1,3 +1,4 @@
+/* Author: Sofian Mustafa */
 const socket = io();
 
 ////// Html Element Selections //////
@@ -33,7 +34,7 @@ let showUsersFlag = false;
 // listen for a submit event on the chat form
 chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    // if a value was submitted for the message
+    // if a value is submitted for the message
     if (chatInput.value) {
         // emit the message and user's socket id to the server
         socket.emit('chat message', { chatInput: chatInput.value, sId: socket.id });
@@ -42,7 +43,7 @@ chatForm.addEventListener('submit', (e) => {
     }
 });
 
-// listen for a click from the 'online users' icon button
+// listen for a click even for the 'online users' icon button
 showOnlineUsersBtn.addEventListener('click', () => {
     // if the flag is unset, show the list of online users
     // and hide the messages
@@ -62,7 +63,7 @@ showOnlineUsersBtn.addEventListener('click', () => {
 
 })
 
-// listen for button click to set name color
+// listen for button click to set nickname color
 // set the userColor based on the button clicked
 colorBtns.forEach((button) => {
     button.addEventListener('click', () => {
@@ -93,6 +94,9 @@ logonForm.addEventListener('submit', (e) => {
     if (curName == '') {
         // set a default, random name
         curName = _.sample(defaultNamesArr);
+        // remove the selected name from the array - it is no longer available
+        defaultNamesArr.splice(defaultNamesArr.indexOf(curName), 1);
+
     }
 
     // Emit the user's name and color to the server with a callback function checking for the 
@@ -103,8 +107,9 @@ logonForm.addEventListener('submit', (e) => {
         } else {
             // empty the error message
             errMsg.textContent = '';
-            socket.emit('all messages')
-                // switch views
+            // render the chat log for the new connection
+            socket.emit('all messages');
+            // switch views
             logonView.classList.add('hide');
             chatInterface.classList.remove('hide');
 
@@ -117,22 +122,21 @@ logonForm.addEventListener('submit', (e) => {
 
 // renders messages into the chat log
 function renderMessage(message, author, time, color, sId) {
-    let msgListItem = document.createElement('li');
     let messageContainer = document.createElement('div');
     messageContainer.className = 'message-cont';
+    let msgListItem = document.createElement('li');
+    msgListItem.id = 'msg-list-item';
 
     let messageElement = document.createElement('p'),
         messageBy = document.createElement('p'),
         timeElement = document.createElement('p');
 
-    msgListItem.id = 'msg-list-item';
-
-
-
+    // set content of a chat message, its timestamp, and author
     messageElement.textContent = message;
     messageBy.textContent = author;
     timeElement.textContent = time;
 
+    // set the author's nickname color to their selected color
     messageBy.style.color = color;
 
     timeElement.id = "time";
@@ -149,7 +153,7 @@ function renderMessage(message, author, time, color, sId) {
     // append the list item to the ul
     messageList.appendChild(msgListItem);
 
-    // style the message for the connection it was sent from
+    // style the message based on the connection it was sent from
     if (sId === socket.id) {
         msgListItem.classList.add('msg-sender');
     } else {
@@ -160,8 +164,9 @@ function renderMessage(message, author, time, color, sId) {
 
 // adds a new message to the log
 socket.on('chat message', (obj) => {
-    // render sent messages only for those who can see the chat interface
-    // 'all messages' event handles message rendering for new connections
+    // render messages that are sent only for those who can see the chat interface
+    /* 'all messages' event handles message rendering for new connections & connections
+    that connected before messages were sent in the chat but did not log in*/
     if (!chatInterface.classList.contains('hide')) {
         renderMessage(obj.chatInput, obj.name, obj.time, obj.color, obj.sId);
     }
@@ -191,6 +196,7 @@ socket.on('all messages', (userMessages) => {
     }
 });
 
+// updates list of online users
 socket.on('update user interface', (users) => {
 
     // remove original list items
@@ -201,7 +207,9 @@ socket.on('update user interface', (users) => {
     // update the list with users from the updated users list.
     for (let nick of users.nicknames) {
         let userItem = document.createElement('li');
+        // set the nickname of the user
         userItem.textContent = nick;
+        // set the color of the nickname
         for (user of users.users) {
             if (user.name == nick) {
                 userItem.style.color = user.color;

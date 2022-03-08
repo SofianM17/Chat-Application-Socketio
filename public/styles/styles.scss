@@ -1,3 +1,4 @@
+// Author: Sofian Mustafa
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
 * {
     box-sizing: border-box;
@@ -6,6 +7,7 @@
     font-family: 'Open Sans', sans-serif;
 }
 
+// styles for color selection buttons
 .color-btn {
     width: 42px;
     height: 42px;
@@ -27,6 +29,7 @@
     cursor: pointer;
 }
 
+// fills for individual color selection buttons
 #c1 {
     background-color: #fe6d73;
 }
@@ -48,6 +51,7 @@
     ;
 }
 
+// flex styling for wrapper of color selection buttons
 .color-selections {
     display: flex;
     width: 100%;
@@ -57,6 +61,7 @@
     margin-bottom: 50px;
 }
 
+// style for form inputs
 .input {
     border-radius: 0.75em;
     border: none;
@@ -70,12 +75,14 @@
     }
 }
 
+// flex styles for logon form wrapper
 #logon-form-wrapper {
     height: 80vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    // flex styles for logon form
     #logon-form {
         width: 100%;
         display: flex;
@@ -83,6 +90,7 @@
         justify-content: space-around;
         align-items: center;
         height: 300px;
+        //styles for cta button
         #submit-info-btn {
             border: none;
             padding: 5px 10px 5px 10px;
@@ -93,6 +101,7 @@
             color: white;
             cursor: pointer;
         }
+        // styles for error message
         #err-msg {
             height: 20px;
             color: rgb(255, 130, 130);
@@ -212,6 +221,7 @@
     }
 }
 
+// special background color for sender of message
 .msg-sender {
     .message-cont {
         background-color: #0094ff !important;
