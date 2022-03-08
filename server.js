@@ -7,6 +7,7 @@ const path = require('path');
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
+const nodemon = require('nodemon');
 
 const luxon = require('luxon');
 
@@ -20,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // list of names
 let nicknames = [];
 
-// class for creating user obects
+// class for creating user objects
 class User {
     constructor(name, id, color, messages) {
         this.sId = id;
@@ -41,8 +42,8 @@ class Message {
 
 // list of users
 let users = [];
-//
-let messages = [];
+// list of all messages in the chatlog 
+let chatlog = [];
 
 // run server when a client connects
 io.on('connection', (socket) => {
@@ -115,8 +116,8 @@ io.on('connection', (socket) => {
                 curColor = user.color;
                 // store the user's message with its timestamp in the user object
                 user.messages.push(new Message(obj.chatInput, curTime));
-                // push the message to the messages array to maintain ordering of messages
-                messages.push(obj.chatInput);
+                // push the message to the chatlog to maintain ordering of messages
+                chatlog.push(obj.chatInput);
                 console.log(user);
             }
         }
@@ -124,8 +125,8 @@ io.on('connection', (socket) => {
         io.emit('chat message', { chatInput: obj.chatInput, name: curName, time: curTime, color: curColor, sId: socket.id });
     });
 
-    socket.on('all messages', (messageListHtml) => {
-        io.emit('all messages', messageListHtml);
+    socket.on('all messages', () => {
+        io.emit('all messages', { users: users, chatlog: chatlog, sId: socket.id });
     });
 
     socket.on('set-user-info', (obj, uniqueName) => {
@@ -143,7 +144,7 @@ io.on('connection', (socket) => {
 
     //  emit an updated list of users to the client
     function updateUserList() {
-        io.emit('update user interface', users);
+        io.emit('update user interface', { users: users, nicknames: nicknames });
     }
 
     socket.on('disconnect', () => {
@@ -162,9 +163,9 @@ io.on('connection', (socket) => {
         }
 
         // filter out the disconnected user from the list of users
-        users = users.filter((user) => {
-            return user.sId !== socket.id;
-        });
+        // users = users.filter((user) => {
+        //     return user.sId !== socket.id;
+        // });
 
         updateUserList();
     });

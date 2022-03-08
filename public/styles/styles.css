@@ -19,6 +19,17 @@
   border: 4px solid #74d8ff;
 }
 
+.color-btn-pick-any {
+  border-radius: 2em;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+}
+
+.color-btn-pick-any:focus {
+  border: 4px solid #74d8ff;
+}
+
 #c1 {
   background-color: #fe6d73;
 }

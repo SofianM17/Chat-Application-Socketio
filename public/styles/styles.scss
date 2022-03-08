@@ -17,6 +17,16 @@
     cursor: pointer;
 }
 
+.color-btn-pick-any {
+    border-radius: 2em;
+    width: 42px;
+    height: 42px;
+    &:focus {
+        border: 4px solid rgb(116, 216, 255);
+    }
+    cursor: pointer;
+}
+
 #c1 {
     background-color: #fe6d73;
 }

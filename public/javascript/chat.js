@@ -1,34 +1,34 @@
 const socket = io();
 
+////// Html Element Selections //////
+
+//// Chat ////
 let chatInput = document.getElementById('msg-input');
 let chatForm = document.getElementById('chat-form');
 let messageList = document.getElementById("message-list");
 let messageWrap = document.getElementById('message-wrap');
 let messageListHtml;
 let messagingView = document.getElementById('messaging-interface-wrapper');
-
 let chatInterface = document.getElementById('chat-interface-wrap')
 
+//// Logon form ////
 let nameInput = document.getElementById('name-input');
 let logonForm = document.getElementById('logon-form');
 let errMsg = document.getElementById('err-msg');
-
 let colorBtns = document.querySelectorAll('.color-btn');
-let showOnlineUsersBtn = document.getElementById('show-users');
-let userColor;
-
 let logonView = document.getElementById('logon-form-wrapper');
-
-let onlineUsersList = document.getElementById('online-users-list');
-
-// flag for the button that shows the online users
-let showUsersFlag = false;
-
 // array of colors possible for users to select
-let colorArr = ['#fe6d73', '#ffcb77', '#ffcb77', '#cd61f8'];
-
+let colorArr = ['#fe6d73', '#ffcb77', '#17c3b2', '#cd61f8'];
 // some default nicknames for random selection if a name is not inputted
 let defaultNamesArr = ['Moana', 'Olaf', 'Flynn', 'Jafar', 'Winnie', 'Mickey', 'Stitch', 'Simba', 'Dory', 'Nemo', 'Buzz', 'Woody', 'McQueen']
+
+//// Online user view ////
+let onlineUsersList = document.getElementById('online-users-list');
+let showOnlineUsersBtn = document.getElementById('show-users');
+let userColor;
+// flag for toggling view of online users
+let showUsersFlag = false;
+
 
 // listen for a submit event on the chat form
 chatForm.addEventListener('submit', (e) => {
@@ -65,7 +65,7 @@ showOnlineUsersBtn.addEventListener('click', () => {
 // listen for button click to set name color
 // set the userColor based on the button clicked
 colorBtns.forEach((button) => {
-    button.addEventListener('click', element => {
+    button.addEventListener('click', () => {
         if (button.id == 'c1') {
             userColor = colorArr[0];
         } else if (button.id == 'c2') {
@@ -103,7 +103,8 @@ logonForm.addEventListener('submit', (e) => {
         } else {
             // empty the error message
             errMsg.textContent = '';
-            // switch views
+            socket.emit('all messages')
+                // switch views
             logonView.classList.add('hide');
             chatInterface.classList.remove('hide');
 
@@ -114,55 +115,81 @@ logonForm.addEventListener('submit', (e) => {
 
 });
 
-socket.on('chat message', (obj) => {
+// renders messages into the chat log
+function renderMessage(message, author, time, color, sId) {
     let msgListItem = document.createElement('li');
     let messageContainer = document.createElement('div');
     messageContainer.className = 'message-cont';
 
-    let message = document.createElement('p'),
+    let messageElement = document.createElement('p'),
         messageBy = document.createElement('p'),
-        time = document.createElement('p');
+        timeElement = document.createElement('p');
 
     msgListItem.id = 'msg-list-item';
 
 
 
-    message.textContent = obj.chatInput;
-    messageBy.textContent = obj.name;
-    time.textContent = obj.time;
+    messageElement.textContent = message;
+    messageBy.textContent = author;
+    timeElement.textContent = time;
 
-    messageBy.style.color = obj.color;
+    messageBy.style.color = color;
 
-    time.id = "time";
+    timeElement.id = "time";
     messageBy.id = "name";
 
     // append the message to the message container
-    messageContainer.appendChild(message);
+    messageContainer.appendChild(messageElement);
 
     // append the message container, timestamp, and nickname to a list item
     msgListItem.appendChild(messageBy);
     msgListItem.appendChild(messageContainer);
-    msgListItem.appendChild(time);
+    msgListItem.appendChild(timeElement);
 
     // append the list item to the ul
     messageList.appendChild(msgListItem);
 
-    // bold the message for the connection it was sent from
-    if (obj.sId === socket.id) {
+    // style the message for the connection it was sent from
+    if (sId === socket.id) {
         msgListItem.classList.add('msg-sender');
     } else {
         msgListItem.classList.remove('msg-sender');
     }
 
-    console.log(messageList.innerHTML);
+}
 
-    //messageListHtml = messageList.innerHTML;
-
+// adds a new message to the log
+socket.on('chat message', (obj) => {
+    // render sent messages only for those who can see the chat interface
+    // 'all messages' event handles message rendering for new connections
+    if (!chatInterface.classList.contains('hide')) {
+        renderMessage(obj.chatInput, obj.name, obj.time, obj.color, obj.sId);
+    }
 });
 
-socket.on('all messages', (allMessagesHtml) => {
-    messageWrap.innerHTML = allMessagesHtml;
-})
+// renders all messages that are in the log for newly connected users
+socket.on('all messages', (userMessages) => {
+    let users = userMessages.users;
+    let chatlog = userMessages.chatlog;
+
+    // if this is the newest connection
+    if (socket.id == userMessages.sId) {
+        // for every message in the chatlog
+        for (let message of chatlog) {
+            // for every user
+            for (let user of users) {
+                // for every message stored in the user's object
+                for (userMessage of user.messages) {
+                    // if the chatlog message matches the message in the user's object
+                    if (userMessage.message == message) {
+                        // render the message with these parameters
+                        renderMessage(message, user.name, userMessage.time, user.color, user.sId);
+                    }
+                }
+            }
+        }
+    }
+});
 
 socket.on('update user interface', (users) => {
 
@@ -172,13 +199,15 @@ socket.on('update user interface', (users) => {
     }
 
     // update the list with users from the updated users list.
-    for (let user of users) {
+    for (let nick of users.nicknames) {
         let userItem = document.createElement('li');
-        userItem.textContent = user.name;
-        userItem.style.color = user.color;
+        userItem.textContent = nick;
+        for (user of users.users) {
+            if (user.name == nick) {
+                userItem.style.color = user.color;
+            }
+        }
         onlineUsersList.appendChild(userItem);
     }
-
-    //socket.emit('all messages', messageListHtml);
 
 });
