@@ -3,7 +3,7 @@
 1. navigate to the root directory where 'server.js' is located
 2. run "npm install" to ensure all dependencies are installed
 3. run "npm start" to start the server
-4. navigate to the server at the url "http://localhost:3000/"
+4. navigate to the server at the url http://localhost:3000/
 
 # To use the application:
 1. Enter a nickname into the input field or leave it blank to be automatically assigned a name. If a nickname that is currently in use is entered, an error message will be displayed.
