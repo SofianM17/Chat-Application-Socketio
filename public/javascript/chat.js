@@ -139,6 +139,10 @@ function renderMessage(message, author, time, color, sId) {
     // set the author's nickname color to their selected color
     messageBy.style.color = color;
 
+    // outline the message of the sender with the sender's color for all messages except the current user's sent messages
+    messageContainer.style.border = "1px solid " + color;
+
+
     timeElement.id = "time";
     messageBy.id = "name";
 
@@ -156,6 +160,10 @@ function renderMessage(message, author, time, color, sId) {
     // style the message based on the connection it was sent from
     if (sId === socket.id) {
         msgListItem.classList.add('msg-sender');
+        // remove the colored border from the current user's sent messages
+        for (let childNode of msgListItem.childNodes) {
+            childNode.style.border = null;
+        }
     } else {
         msgListItem.classList.remove('msg-sender');
     }

@@ -83,6 +83,8 @@ io.on('connection', (socket) => {
         for (let user of users) {
             // if the socket id of the user matches the socket id of the emitted object
             if (user.sId == obj.sId) {
+                curName = user.name;
+                curColor = user.color;
                 // if a new nickname was set, change it
                 if (newNickname != null) {
                     // if new nickname is not in the list of current nicknames
@@ -113,8 +115,6 @@ io.on('connection', (socket) => {
                     updateUserList();
                 }
 
-                curName = user.name;
-                curColor = user.color;
                 // store the user's message with its timestamp in the user object
                 user.messages.push(new Message(obj.chatInput, curTime));
                 // push the message to the chatlog

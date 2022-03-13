@@ -5,6 +5,7 @@
     background-color: rgb(21, 21, 21);
     color: white;
     font-family: 'Open Sans', sans-serif;
+    scroll-behavior: smooth;
 }
 
 // styles for color selection buttons
@@ -75,6 +76,13 @@
     }
 }
 
+#msg-input {
+    width: 80%;
+    @media only screen and (min-width: 1050px) {
+        width: 60%;
+    }
+}
+
 // flex styles for logon form wrapper
 #logon-form-wrapper {
     height: 80vh;
@@ -115,7 +123,7 @@
 #chat-interface-wrap {
     display: flex;
     flex-direction: column;
-    height: 98vh;
+    height: 97vh;
     justify-content: space-between;
     #messaging-interface-wrapper {
         display: flex;
@@ -149,6 +157,16 @@
         width: 100%;
         height: 50px;
         margin-top: 10px;
+        @media only screen and (min-width: 700px) {
+            margin: auto;
+            width: 90%;
+            padding-top: 20px;
+        }
+        @media only screen and (min-width: 1050px) {
+            margin: auto;
+            width: 75%;
+            padding-top: 20px;
+        }
         #show-users,
         #show-settings {
             border: none;
@@ -182,16 +200,27 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    align-items: center;
     padding: 10px 20px 20px 20px;
     row-gap: 40px;
     height: 100%;
     #msg-list-item {
         list-style: none;
-        width: 50%;
-        min-width: 100%;
+        width: 100%;
+        @media only screen and (min-width: 700px) {
+            width: max-content;
+            max-width: 40%;
+            margin-right: auto;
+            margin-left: 10%;
+        }
+        @media only screen and (min-width: 1050px) {
+            max-width: 30%;
+            margin-right: auto;
+            margin-left: 20%;
+        }
         p {
             margin: 0px;
-            padding-left: 10px;
+            padding: 0px 10px 0px 10px;
             font-weight: 500;
         }
         #time {
@@ -225,5 +254,13 @@
 .msg-sender {
     .message-cont {
         background-color: #0094ff !important;
+    }
+    @media only screen and (min-width: 700px) {
+        margin-left: auto !important;
+        margin-right: 10% !important;
+    }
+    @media only screen and (min-width: 1050px) {
+        margin-left: auto !important;
+        margin-right: 20% !important;
     }
 }

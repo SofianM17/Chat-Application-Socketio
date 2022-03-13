@@ -5,6 +5,7 @@
   background-color: #151515;
   color: white;
   font-family: 'Open Sans', sans-serif;
+  scroll-behavior: smooth;
 }
 
 .color-btn {
@@ -91,6 +92,16 @@
   color: #bbbbbb;
 }
 
+#msg-input {
+  width: 80%;
+}
+
+@media only screen and (min-width: 1050px) {
+  #msg-input {
+    width: 60%;
+  }
+}
+
 #logon-form-wrapper {
   height: 80vh;
   display: -webkit-box;
@@ -152,7 +163,7 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  height: 98vh;
+  height: 97vh;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
@@ -221,6 +232,22 @@
   margin-top: 10px;
 }
 
+@media only screen and (min-width: 700px) {
+  #chat-interface-wrap #chat-header {
+    margin: auto;
+    width: 90%;
+    padding-top: 20px;
+  }
+}
+
+@media only screen and (min-width: 1050px) {
+  #chat-interface-wrap #chat-header {
+    margin: auto;
+    width: 75%;
+    padding-top: 20px;
+  }
+}
+
 #chat-interface-wrap #chat-header #show-users,
 #chat-interface-wrap #chat-header #show-settings {
   border: none;
@@ -272,6 +299,9 @@
   -webkit-box-pack: end;
       -ms-flex-pack: end;
           justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   padding: 10px 20px 20px 20px;
   row-gap: 40px;
   height: 100%;
@@ -279,13 +309,31 @@
 
 #message-list #msg-list-item {
   list-style: none;
-  width: 50%;
-  min-width: 100%;
+  width: 100%;
+}
+
+@media only screen and (min-width: 700px) {
+  #message-list #msg-list-item {
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    max-width: 40%;
+    margin-right: auto;
+    margin-left: 10%;
+  }
+}
+
+@media only screen and (min-width: 1050px) {
+  #message-list #msg-list-item {
+    max-width: 30%;
+    margin-right: auto;
+    margin-left: 20%;
+  }
 }
 
 #message-list #msg-list-item p {
   margin: 0px;
-  padding-left: 10px;
+  padding: 0px 10px 0px 10px;
   font-weight: 500;
 }
 
@@ -325,5 +373,19 @@
 
 .msg-sender .message-cont {
   background-color: #0094ff !important;
+}
+
+@media only screen and (min-width: 700px) {
+  .msg-sender {
+    margin-left: auto !important;
+    margin-right: 10% !important;
+  }
+}
+
+@media only screen and (min-width: 1050px) {
+  .msg-sender {
+    margin-left: auto !important;
+    margin-right: 20% !important;
+  }
 }
 /*# sourceMappingURL=styles.css.map */
