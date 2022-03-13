@@ -1,10 +1,10 @@
-To run the application:
+#To run the application:
 	1. navigate to the root directory where 'server.js' is located
 	2. run "npm install" to ensure all dependencies are installed
 	3. run "npm start" to start the server
 	4. navigate to the server at the url "http://localhost:3000/"
 
-To use the application:
+#To use the application:
 	1. Enter a nickname into the input field or leave it blank to be automatically assigned a name.
 		If a nickname that is currently in use is entered, an error message will be displayed.
 	2. Select one of the color options. If no color option is selected, a random color will be
@@ -16,7 +16,7 @@ To use the application:
 	of the interface. This list is automatically updated as users join and leave the chatroom.
 	The list is also updated when users change their nickname or nickname color.
 
-Commands:
+#Commands:
 	- To change your color, enter the following command into the message input field:
 
 		"/nickcolor <RRRGGGBBB>"
@@ -41,12 +41,12 @@ Commands:
 
 		Example: "/nick <George>"
 
-Additional information:
+#Additional information:
 	- A menu icon was included at the top right of the interface to visually balance the header
 		and provide a way to change nicknames and colors without using commands. Since this
 		could not be implement in the given time constraints, functionality will be added
 		to this button in the future.
 
-Reference:
+#Reference:
 	- Nodemon and express were partly set up by following this example by Traversy Media
 		https://www.youtube.com/watch?v=jD7FnbI76Hg&t=1605s
